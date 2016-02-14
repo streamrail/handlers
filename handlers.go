@@ -75,7 +75,9 @@ func (h combinedLoggingHandler) ServeHTTP(w http.ResponseWriter, req *http.Reque
 	logger := makeLogger(w)
 	url := *req.URL
 	h.handler.ServeHTTP(logger, req)
-	writeCombinedLog(h.writer, req, url, t, logger.Status(), logger.Size())
+	if req.URL.Path != "/health" {
+		writeCombinedLog(h.writer, req, url, t, logger.Status(), logger.Size())
+	}
 }
 
 func makeLogger(w http.ResponseWriter) loggingResponseWriter {
